@@ -1,7 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Reserveren() {
+  const [sent, setSent] = useState(false);
+
   return (
     <main className="min-h-screen bg-[#151515] text-white">
       <nav className="border-b border-white/10 bg-black/80">
@@ -42,117 +47,87 @@ export default function Reserveren() {
 
       <section className="px-6 py-16">
         <div className="mx-auto max-w-3xl">
-          <div className="mb-12 text-center">
+          <div className="mb-10 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#c9a45c]">
               L'Atelier à Pizza
             </p>
-            <h1 className="mt-4 text-5xl font-bold">Réserver une table</h1>
+
+            <h1 className="mt-4 text-5xl font-bold">
+              Réserver une table
+            </h1>
+
             <p className="mt-4 text-gray-400">
-              Réservez votre table et profitez d'un moment convivial à
-              Bruxelles.
+              Réservez votre table au cœur de Bruxelles.
             </p>
           </div>
 
-          <form className="space-y-6 rounded-xl border border-white/10 bg-[#202020] p-8">
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Nom
-                </label>
-                <input
-                  type="text"
-                  name="nom"
-                  required
-                  className="w-full rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
-                  placeholder="Votre nom"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Téléphone
-                </label>
-                <input
-                  type="tel"
-                  name="telephone"
-                  required
-                  className="w-full rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
-                  placeholder="Votre numéro"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium">
-                E-mail
-              </label>
+          <form
+            className="space-y-5 rounded-xl border border-white/10 bg-[#202020] p-8"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSent(true);
+            }}
+          >
+            <div className="grid gap-5 sm:grid-cols-2">
               <input
-                type="email"
-                name="email"
+                name="nom"
                 required
-                className="w-full rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
-                placeholder="votre@email.com"
+                placeholder="Votre nom"
+                className="rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
+              />
+
+              <input
+                name="telephone"
+                required
+                type="tel"
+                placeholder="Votre numéro"
+                className="rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
               />
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-3">
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  name="date"
-                  required
-                  className="w-full rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
-                />
-              </div>
+            <input
+              name="email"
+              required
+              type="email"
+              placeholder="Votre e-mail"
+              className="w-full rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
+            />
 
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Heure
-                </label>
-                <input
-                  type="time"
-                  name="heure"
-                  required
-                  className="w-full rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Personnes
-                </label>
-                <select
-                  name="personnes"
-                  required
-                  className="w-full rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
-                >
-                  <option value="">Aantal</option>
-                  <option value="1">1 personne</option>
-                  <option value="2">2 personnes</option>
-                  <option value="3">3 personnes</option>
-                  <option value="4">4 personnes</option>
-                  <option value="5">5 personnes</option>
-                  <option value="6">6 personnes</option>
-                  <option value="7">7 personnes</option>
-                  <option value="8">8 personnes</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium">
-                Message
-              </label>
-              <textarea
-                name="message"
-                rows={4}
-                className="w-full rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
-                placeholder="Une demande particulière ?"
+            <div className="grid gap-5 sm:grid-cols-3">
+              <input
+                name="date"
+                required
+                type="date"
+                className="rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
               />
+
+              <input
+                name="heure"
+                required
+                type="time"
+                className="rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
+              />
+
+              <select
+                name="personnes"
+                required
+                className="rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
+              >
+                <option value="">Personnes</option>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                  <option key={n} value={n}>
+                    {n} personne{n > 1 ? "s" : ""}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            <textarea
+              name="message"
+              rows={4}
+              placeholder="Une demande particulière ?"
+              className="w-full rounded-md border border-white/10 bg-[#151515] px-4 py-3 outline-none focus:border-[#c9a45c]"
+            />
 
             <button
               type="submit"
@@ -160,6 +135,12 @@ export default function Reserveren() {
             >
               ENVOYER LA RÉSERVATION
             </button>
+
+            {sent && (
+              <p className="text-center font-medium text-[#c9a45c]">
+                Votre réservation a bien été envoyée !
+              </p>
+            )}
           </form>
         </div>
       </section>
