@@ -103,11 +103,27 @@ export default function AdminPage() {
     0
   );
 
-  const today = new Date().toISOString().split("T")[0];
+  const now = new Date();
 
-  const todayReservations = reservations.filter((reservation) =>
-    reservation.reservation_date.startsWith(today)
-  );
+const today =
+  now.getFullYear() +
+  "-" +
+  String(now.getMonth() + 1).padStart(2, "0") +
+  "-" +
+  String(now.getDate()).padStart(2, "0");
+
+ const todayReservations = reservations.filter((reservation) => {
+  const date = new Date(reservation.reservation_date);
+
+  const reservationDay =
+    date.getFullYear() +
+    "-" +
+    String(date.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(date.getDate()).padStart(2, "0");
+
+  return reservationDay === today;
+});
 
   const newReservations = reservations.slice(0, 5);
 
