@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 export default function AdminReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedReservation, setSelectedReservation] =
-    useState(null);
+  const [selectedReservation, setSelectedReservation] = useState(null);
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState("");
 
@@ -14,12 +13,9 @@ export default function AdminReservationsPage() {
     try {
       setLoading(true);
 
-      const response = await fetch(
-        "/api/admin/reservations",
-        {
-          cache: "no-store",
-        }
-      );
+      const response = await fetch("/api/admin/reservations", {
+        cache: "no-store",
+      });
 
       const result = await response.json();
 
@@ -39,35 +35,61 @@ export default function AdminReservationsPage() {
     loadReservations();
   }, []);
 
-  const filteredReservations = reservations.filter(
-    (reservation) => {
-      const searchValue = search.toLowerCase();
+  async function deleteReservation(id) {
+    const confirmed = window.confirm(
+      "Weet je zeker dat je deze reservatie wilt verwijderen?"
+    );
 
-      const matchesSearch =
-        reservation.name
-          ?.toLowerCase()
-          .includes(searchValue) ||
-        reservation.email
-          ?.toLowerCase()
-          .includes(searchValue) ||
-        reservation.phone
-          ?.toLowerCase()
-          .includes(searchValue);
-
-      const reservationDate =
-        new Date(
-          reservation.reservation_date
-        )
-          .toISOString()
-          .split("T")[0];
-
-      const matchesDate =
-        !dateFilter ||
-        reservationDate === dateFilter;
-
-      return matchesSearch && matchesDate;
+    if (!confirmed) {
+      return;
     }
-  );
+
+    try {
+      const response = await fetch("/api/admin/reservations", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error || "Reservatie kon niet worden verwijderd."
+        );
+      }
+
+      setSelectedReservation(null);
+      await loadReservations();
+    } catch (error) {
+      console.error(error);
+      alert("De reservatie kon niet worden verwijderd.");
+    }
+  }
+
+  const filteredReservations = reservations.filter((reservation) => {
+    const searchValue = search.toLowerCase();
+
+    const matchesSearch =
+      reservation.name?.toLowerCase().includes(searchValue) ||
+      reservation.email?.toLowerCase().includes(searchValue) ||
+      reservation.phone?.toLowerCase().includes(searchValue);
+
+    const reservationDate = new Date(
+      reservation.reservation_date
+    )
+      .toISOString()
+      .split("T")[0];
+
+    const matchesDate =
+      !dateFilter || reservationDate === dateFilter;
+
+    return matchesSearch && matchesDate;
+  });
 
   return (
     <main className="admin-page">
@@ -284,6 +306,7 @@ export default function AdminReservationsPage() {
                   <button
                     className="admin-reservation reservation-clickable"
                     key={reservation.id}
+                    type="button"
                     onClick={() =>
                       setSelectedReservation(
                         reservation
@@ -357,7 +380,11 @@ export default function AdminReservationsPage() {
 
                       <span></span>
 
-                      Nouvelle
+                      {reservation.status === "bevestigd"
+                        ? "Bevestigd"
+                        : reservation.status === "geannuleerd"
+                        ? "Geannuleerd"
+                        : "Nouvelle"}
 
                     </div>
 
@@ -395,6 +422,7 @@ export default function AdminReservationsPage() {
 
             <button
               className="reservation-modal-close"
+              type="button"
               onClick={() =>
                 setSelectedReservation(null)
               }
@@ -477,14 +505,31 @@ export default function AdminReservationsPage() {
             </div>
 
 
-            <button
-              className="admin-refresh modal-button"
-              onClick={() =>
-                setSelectedReservation(null)
-              }
-            >
-              Fermer
-            </button>
+            <div className="modal-actions">
+
+              <button
+                className="reservation-cancel-button"
+                type="button"
+                onClick={() =>
+                  deleteReservation(
+                    selectedReservation.id
+                  )
+                }
+              >
+                🗑️ Verwijderen
+              </button>
+
+              <button
+                className="admin-refresh modal-button"
+                type="button"
+                onClick={() =>
+                  setSelectedReservation(null)
+                }
+              >
+                Fermer
+              </button>
+
+            </div>
 
           </div>
 
