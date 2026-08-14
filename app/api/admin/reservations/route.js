@@ -4,16 +4,17 @@ export async function GET() {
   try {
     const [rows] = await db.query(`
       SELECT
-        id,
-        name,
-        email,
-        phone,
-        reservation_date,
-        reservation_time,
-        guests,
-        message,
-        created_at
-      FROM reservations
+  id,
+  name,
+  email,
+  phone,
+  reservation_date,
+  reservation_time,
+  guests,
+  message,
+  created_at,
+  status
+FROM reservations
       ORDER BY reservation_date ASC, reservation_time ASC
     `);
 
